@@ -5,7 +5,7 @@ React-Native To-Do App using Google Firebase Databse
 
 You should have installed node.js. --> https://nodejs.org/en/download/
 
-Download the source code OR clone the project by ruuning git clone https://github.com/smitthakkar1/ToDoList.git and run `npm install`
+Download the source code OR clone the project by ruuning `git clone https://github.com/smitthakkar1/ToDoList.git` and run `npm install`
 
 # Run Application
 
