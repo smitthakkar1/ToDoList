@@ -7,11 +7,11 @@ const height = Dimensions.get('window').height; // 592
 export default class Header extends Component {
     render() {
         return(
-        <View style={styles.title}>
-            <Text style={styles.titleText}>
-                To-Do List
-            </Text>
-        </View>
+            <View style={styles.title}>
+                <Text style={styles.titleText}>
+                    To-Do List
+                </Text>
+            </View>
         );
     }
 }

@@ -15,89 +15,103 @@ import { CheckBox } from 'native-base';
 import * as firebase from "firebase";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Header from "./Header";
+import {firebaseref} from './firebase'
 
 const width = Dimensions.get('window').width; // 360
 const height = Dimensions.get('window').height; // 592
-var user = firebase.auth().currentUser;
+// var user = firebase.auth().currentUser;
 
 export default class Main extends Component {
     constructor(props) {
         super(props);
-        this.allRef = firebase.database().ref().child('All');
-        this.openRef = firebase.database().ref().child('Open');
-        this.completedRef = firebase.database().ref().child('Completed');
+        console.ignoredYellowBox = ['Setting a timer'];
+
+        this.userRef = firebase.database().ref('Users/'+firebase.auth().currentUser.uid);
+        this.allRef = firebase.database().ref('Users/'+firebase.auth().currentUser.uid).child('All');
+        // this.openRef = firebase.database().ref('Users/'+firebase.auth().currentUser.uid).child('Open');
+        // this.completedRef = firebase.database().ref('Users/'+firebase.auth().currentUser.uid).child('Completed');
+
         this.state = {
-            completedToDo: '',
-            openToDo:'',
-            allToDo:'',
+            todo: '',
             AlltodoSource: new ListView.DataSource({rowHasChanged:(row1,row2) => row1 !== row2}),
-            OpentodoSource: new ListView.DataSource({rowHasChanged:(row3,row4) => row3 !== row4}),
-            CompletedtodoSource: new ListView.DataSource({rowHasChanged:(row5,row6) => row5 !== row6})
+            // OpentodoSource: new ListView.DataSource({rowHasChanged:(row1,row2) => row1 !== row2}),
+            // CompletedtodoSource: new ListView.DataSource({rowHasChanged:(row1,row2) => row1 !== row2})
         };
-        this.all = [];
-        this.open = [];
-        this.completed = [];
+        this.Alltodo = [];
+        // this.open = [];
+        // this.completed = [];
+        // this.users=[];
     }
 
     componentDidMount(){
         this.allRef.on('child_added', (data) => {
-            this.all.push({ id : data.key, text: data.val() });
+            this.Alltodo.push({ id : data.key, text: data.val() });
             this.setState({
-                AlltodoSource:  this.state.AlltodoSource.cloneWithRows(this.all)
+                AlltodoSource:  this.state.AlltodoSource.cloneWithRows(this.Alltodo)
             });
         });
 
         this.allRef.on('child_removed', (data) => {
-            this.all = this.all.filter((removed) => removed.id != data.key);
+            this.Alltodo = this.Alltodo.filter((removed) => removed.id !== data.key);
             this.setState({
-                AlltodoSource:  this.state.AlltodoSource.cloneWithRows(this.all)
+                AlltodoSource:  this.state.AlltodoSource.cloneWithRows(this.Alltodo)
             })
         });
 
-        this.openRef.on('child_added', (data) => {
-            this.open.push({ id : data.key, text: data.val() });
-            this.setState({
-                OpentodoSource:  this.state.OpentodoSource.cloneWithRows(this.open)
-            });
-        });
-
-        this.openRef.on('child_removed', (data) => {
-            this.open = this.open.filter((removed) => removed.id != data.key);
-            this.setState({
-                OpentodoSource:  this.state.OpentodoSource.cloneWithRows(this.open)
-            })
-        });
-
-        this.completedRef.on('child_added', (data) => {
-            this.completed.push({ id : data.key, text: data.val() });
-            this.setState({
-                CompletedtodoSource:  this.state.CompletedtodoSource.cloneWithRows(this.completed)
-            });
-        });
-
-        this.completedRef.on('child_removed', (data) => {
-            this.completed = this.completed.filter((removed) => removed.id != data.key);
-            this.setState({
-                CompletedtodoSource:  this.state.CompletedtodoSource.cloneWithRows(this.completed)
-            })
-        });
+        // this.userRef.on('child_added', (data) => {
+        //     this.users.push({ id: data.key, text: data.val()});
+        // });
+        //
+        // this.openRef.on('child_added', (data) => {
+        //     this.open.push({ id : data.key, text: data.val() });
+        //     this.setState({
+        //         OpentodoSource:  this.state.OpentodoSource.cloneWithRows(this.open)
+        //     });
+        // });
+        //
+        // this.openRef.on('child_removed', (data) => {
+        //     this.open = this.open.filter((removed) => removed.id != data.key);
+        //     this.setState({
+        //         OpentodoSource:  this.state.OpentodoSource.cloneWithRows(this.open)
+        //     })
+        // });
+        //
+        // this.completedRef.on('child_added', (data) => {
+        //     this.completed.push({ id : data.key, text: data.val() });
+        //     this.setState({
+        //         CompletedtodoSource:  this.state.CompletedtodoSource.cloneWithRows(this.completed)
+        //     });
+        // });
+        //
+        // this.completedRef.on('child_removed', (data) => {
+        //     this.completed = this.completed.filter((removed) => removed.id != data.key);
+        //     this.setState({
+        //         CompletedtodoSource:  this.state.CompletedtodoSource.cloneWithRows(this.completed)
+        //     })
+        // });
+        // this.allRef.on('value', function(snapshot) {
+        //     console.log(snapshot.val().text);
+        // });
     }
 
-    add(){
 
-        if (user != null) {
-            uid = user.uid;
-            firebase.database().ref('/users/'+uid).push({
-                AllToDo : this.allRef.push({
-                    AllToDo: this.state.completedToDo
-                }),
-                OpenToDo: this.openRef.push({
-                    OpenToDo: this.state.openToDo
-                }),
-                completedToDo: this.setState({
-                    completedToDo: ''
-                })
-        });
+
+    add(){
+        if(this.state.todo !== '') {
+            this.allRef.push({
+                // AllToDo: this.allRef.push({
+                    All: this.state.todo
+                // })
+            });
+            this.setState({
+               todo:''
+            });
+                // OpenToDo: this.openRef.push({
+                //     OpenToDo: this.state.todo
+                // }),
+                // completedToDo: this.completedRef.push({
+                //     completedToDo: this.state.todo
+                // })
         }
     }
 
@@ -105,22 +119,22 @@ export default class Main extends Component {
         this.allRef.child(data.id).remove();
     }
 
-    toCompleted(data){
-        if(data.text != '') {
-            this.completedRef.push({
-                completedToDo: data
-            });
-            this.openRef.child().remove();
-        }
-    }
+    // toCompleted(data){
+    //     if(data.text != '') {
+    //         this.completedRef.push({
+    //             completedToDo: data
+    //         });
+    //         this.openRef.child().remove();
+    //     }
+    // }
 
-    
     renderData(data) {
         return (
             <View>
                 <View style={styles.row}>
-                    <CheckBox checked={false} onPress={() => this.toCompleted(data)} />
-                    <Text style={styles.todoText}>{data.text.AllToDo}</Text>
+                    {/*<CheckBox checked={false} onPress={() => this.toCompleted(data)} />*/}
+                    {console.log(data.text.All)}
+                    <Text style={styles.todoText}>{data.text.All}</Text>
                     <MaterialIcons.Button name="delete" size={25} color="black" onPress={() => this.removeToDo(data)} backgroundColor="rgba(0,0,0,0)" />
                 </View>
                 <View style={styles.lineStyle} />
@@ -135,7 +149,7 @@ export default class Main extends Component {
                     backgroundColor="#ff7f50"
                 />
                 <View style={styles.inputcontainer}>
-                    <TextInput style={styles.input} onChangeText={(text) => this.setState({completedToDo: text})} value={this.state.completedToDo} underlineColorAndroid="white"/>
+                    <TextInput style={styles.input} onChangeText={(text) => this.setState({todo: text})} value={this.state.todo} underlineColorAndroid="white"/>
                     <TouchableHighlight
                         style={styles.button}
                         onPress={() => this.add()}
@@ -145,6 +159,7 @@ export default class Main extends Component {
                 </View>
                 <ListView
                     dataSource={this.state.AlltodoSource}
+                    enableEmptySections={true}
                     renderRow={this.renderData.bind(this)} />
             </ScrollView>
         )

@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { View, Text, Button, ActivityIndicator } from 'react-native';
 import firebase from 'firebase';
 import {TitledInput} from './TitledInput';
-
+import {firebaseref} from './firebase'
 export default class Login extends Component {
     constructor(props){
         super(props);
         // const { navigation } = this.props.navigation;
+
     }
 
     state = { email: '', password: '', error: '', loading: false };
@@ -15,6 +16,7 @@ export default class Login extends Component {
 
         this.setState({ error: '', loading: true });
         const { email, password } = this.state;
+
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(() => {
                 this.setState({ error: '', loading: false });
@@ -25,6 +27,7 @@ export default class Login extends Component {
                     .then(() => {
                         this.setState({ error: '', loading: false });
                         this.props.navigation.navigate('Main');
+                        alert('Congratulations ! Your New Account Has Been Created !');
 
                     })
                     .catch(() => {
@@ -32,22 +35,11 @@ export default class Login extends Component {
                     });
             });
     }
-    componentWillMount(){
-        var config = {
-            apiKey: "AIzaSyBzfHW5mv_8gu7x_PeAtozqmHj4JnnAvNc",
-            authDomain: "todoapp-c5d27.firebaseapp.com",
-            databaseURL: "https://todoapp-c5d27.firebaseio.com",
-            projectId: "todoapp-c5d27",
-            storageBucket: "todoapp-c5d27.appspot.com",
-            messagingSenderId: "414720284433"
-        };
-        firebase.initializeApp(config);
-    }
     renderButtonOrSpinner() {
         if (this.state.loading) {
             return <ActivityIndicator />;
         }
-        return <Button onPress={this.onLoginPress.bind(this)} title="Log in" />;
+        return <Button onPress={this.onLoginPress.bind(this)} title="Sign Up / Log In" />;
     }
     render() {
         return (
@@ -80,4 +72,3 @@ const styles = {
         paddingBottom: 10
     }
 };
-

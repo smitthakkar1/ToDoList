@@ -4,7 +4,6 @@ import { View, Text, TextInput,StyleSheet } from 'react-native';
 
 export const TitledInput = ({ label, value, onChangeText, placeholder, secureTextEntry }) => {
 
-
     return (
         <View style={styles.containerStyle}>
             <Text style={styles.labelStyle}>{label.toUpperCase()}</Text>
