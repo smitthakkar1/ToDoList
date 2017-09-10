@@ -133,7 +133,6 @@ export default class Main extends Component {
             <View>
                 <View style={styles.row}>
                     {/*<CheckBox checked={false} onPress={() => this.toCompleted(data)} />*/}
-                    {console.log(data.text.All)}
                     <Text style={styles.todoText}>{data.text.All}</Text>
                     <MaterialIcons.Button name="delete" size={25} color="black" onPress={() => this.removeToDo(data)} backgroundColor="rgba(0,0,0,0)" />
                 </View>
